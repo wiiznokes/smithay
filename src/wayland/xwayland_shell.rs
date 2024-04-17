@@ -197,7 +197,11 @@ where
                 let serial = u64::from(serial_lo) | (u64::from(serial_hi) << 32);
 
                 compositor::with_states(&data.wl_surface, |states| {
-                    states.cached_state.pending::<XWaylandShellCachedState>().serial = Some(serial);
+                    states
+                        .cached_state
+                        .get::<XWaylandShellCachedState>()
+                        .pending()
+                        .serial = Some(serial);
                 });
 
                 compositor::add_pre_commit_hook::<D, _>(&data.wl_surface, register_serial_commit_hook);
@@ -218,7 +222,11 @@ fn register_serial_commit_hook<D: XWaylandShellHandler + 'static>(
     surface: &WlSurface,
 ) {
     if let Some(serial) = compositor::with_states(surface, |states| {
-        states.cached_state.pending::<XWaylandShellCachedState>().serial
+        states
+            .cached_state
+            .get::<XWaylandShellCachedState>()
+            .pending()
+            .serial
     }) {
         XWaylandShellHandler::xwayland_shell_state(state)
             .by_serial

@@ -1032,7 +1032,8 @@ impl X11Wm {
                 let serial = compositor::with_states(surface, |states| {
                     states
                         .cached_state
-                        .current::<xwayland_shell::XWaylandShellCachedState>()
+                        .get::<xwayland_shell::XWaylandShellCachedState>()
+                        .current()
                         .serial
                 });
 
