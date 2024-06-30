@@ -47,11 +47,12 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             std::process::Command::new(command).spawn().ok();
         }
         _ => {
-            std::process::Command::new("weston-terminal").spawn().ok();
+            std::process::Command::new("firefox").spawn().ok();
         }
     }
 
     event_loop.run(None, &mut data, move |_| {
+        // println!("event_loop run")
         // Smallvil is running
     })?;
 

@@ -8,7 +8,7 @@ use smithay::{
         winit::{self, WinitEvent},
     },
     output::{Mode, Output, PhysicalProperties, Subpixel},
-    reexports::calloop::EventLoop,
+    reexports::{calloop::EventLoop, winit::{dpi::LogicalSize, window::WindowAttributes}},
     utils::{Rectangle, Transform},
 };
 
@@ -21,7 +21,13 @@ pub fn init_winit(
     let display_handle = &mut data.display_handle;
     let state = &mut data.state;
 
-    let (mut backend, winit) = winit::init()?;
+    let (mut backend, winit) = winit::init_from_attributes(
+        WindowAttributes::default()
+            .with_inner_size(LogicalSize::new(1280.0, 800.0))
+            .with_visible(true)
+            .with_decorations(false)
+            .with_transparent(true),
+    )?;
 
     let mode = Mode {
         size: backend.window_size(),
@@ -77,7 +83,7 @@ pub fn init_winit(
                     [&state.space],
                     &[],
                     &mut damage_tracker,
-                    [0.1, 0.1, 0.1, 1.0],
+                    [0.0, 0.0, 0.0, 0.0],
                 )
                 .unwrap();
                 backend.submit(Some(&[damage])).unwrap();
